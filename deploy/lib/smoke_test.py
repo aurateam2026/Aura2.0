@@ -30,8 +30,17 @@ def jpeg_b64(color: tuple[int, int, int]) -> str:
 
 
 def packet(sid: str, cid: int, mtype: str, data: dict, ts: int) -> str:
-    return json.dumps({"direction": "upstream", "type": mtype, "session_id": sid, "chunk_id": cid,
-                       "video_timestamp_ms": ts, "wall_time_ms": int(time.time() * 1000), "data": data})
+    return json.dumps(
+        {
+            "direction": "upstream",
+            "type": mtype,
+            "session_id": sid,
+            "chunk_id": cid,
+            "video_timestamp_ms": ts,
+            "wall_time_ms": int(time.time() * 1000),
+            "data": data,
+        }
+    )
 
 
 async def turn(ws, timeout: float) -> dict:
