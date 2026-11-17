@@ -19,9 +19,7 @@ pytestmark = [pytest.mark.core_model, pytest.mark.cpu]
 
 
 def _proc() -> AuraTwoTokenLogitsProcessor:
-    vllm_config = SimpleNamespace(
-        model_config=SimpleNamespace(tokenizer="models/AURA_v2", model="models/AURA_v2")
-    )
+    vllm_config = SimpleNamespace(model_config=SimpleNamespace(tokenizer="models/AURA_v2", model="models/AURA_v2"))
     return AuraTwoTokenLogitsProcessor(vllm_config, device=torch.device("cpu"), is_pin_memory=False)
 
 
