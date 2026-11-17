@@ -13,8 +13,13 @@ import sys
 from pathlib import Path
 
 # Ids the duplex pipeline relies on (vllm_omni .../aura_omni/control_tokens.py AURA_V2).
-EXPECTED_IDS = {248070: "<|silent|>", 248046: "<|im_end|>", 248045: "<|im_start|>", 74455: "assistant", 248077: "<|respond|>"}
-
+EXPECTED_IDS = {
+    248070: "<|silent|>",
+    248046: "<|im_end|>",
+    248045: "<|im_start|>",
+    74455: "assistant",
+    248077: "<|respond|>",
+}
 
 def main() -> int:
     if len(sys.argv) != 2:
