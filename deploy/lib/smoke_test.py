@@ -98,8 +98,11 @@ async def main() -> int:
             r = await turn(ws, a.timeout)
             passed = bool(r["text"]) and r["audio"] > 0 and r["done"] and not r["errors"]
             results.append(passed)
-            print(f"  [{'PASS' if passed else 'FAIL'}] {label}: asr={r['asr']} text={r['text']} "
-                  f"audio_chunks={r['audio']} tools={r['tools']} first_audio={r['first_audio_s']}s errors={r['errors']}")
+            print(
+                f"  [{'PASS' if passed else 'FAIL'}] {label}: asr={r['asr']} text={r['text']} "
+                f"audio_chunks={r['audio']} tools={r['tools']} "
+                f"first_audio={r['first_audio_s']}s errors={r['errors']}"
+            )
     ok = all(results)
     print("SMOKE TEST", "PASS" if ok else "FAIL")
     return 0 if ok else 1
