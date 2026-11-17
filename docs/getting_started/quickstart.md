@@ -1,0 +1,121 @@
+# Quickstart
+
+This guide will help you quickly get started with vLLM-Omni to perform:
+
+- Offline batched inference
+- Online serving using OpenAI-compatible server
+
+## Prerequisites
+
+- OS: Linux
+- Python: 3.12
+
+## Installation
+
+For installation on accelerator from source:
+
+```bash
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+
+# On accelerator runtime (Linux x86_64, accelerator runtime 13.0)
+uv pip install --torch-backend=cu130 \
+  "vllm @ https://wheels.vllm.ai/4ba787ec9959e566d3b587a796dff07673324da5/vllm-0.33.0-cp38-abi3-manylinux_2_28_x86_64.whl"
+
+git clone https://github.com/vllm-project/vllm-omni.git
+cd vllm-omni
+uv pip install -e .
+```
+
+These commands select vLLM 0.33.0 at the frozen release-branch commit,
+with PyTorch 2.14.0 and accelerator runtime 13.0. The final package is available; native model,
+full CI and ROCm/XPU runtime validation remain pending. Install Omni from this source
+checkout. For published Omni wheels and other installation methods, see the
+[installation guide](installation/README.md).
+
+For source development or Gradio demos, also follow the
+[source dependency instructions](installation/README.md#source-development-and-demo-dependencies)
+to install the temporary Gradio wheel together with the requested extras.
+
+!!! note
+    It is important to install the same major & minor version of vLLM and vLLM Omni, otherwise things may not work as expected. If the versions are misaligned, you will see a warning when you import vLLM Omni.
+
+    If the `vllm` command does not handle `--omni` correctly, verify that the active environment contains the matching vLLM release and vLLM-Omni installation. vLLM owns the CLI entrypoint and delegates `--omni` requests to vLLM-Omni.
+
+## Offline Inference
+
+Text-to-image generation quickstart with vLLM-Omni:
+
+```python
+from vllm_omni.entrypoints.omni import Omni
+
+if __name__ == "__main__":
+    omni = Omni(model="Tongyi-MAI/Z-Image-Turbo")
+    prompt = "a cup of coffee on the table"
+    outputs = omni.generate(prompt)
+    images = outputs[0].images
+    images[0].save("coffee.png")
+```
+
+You can pass a list of prompts and wait for the independent requests to finish,
+as shown below.
+
+!!! info
+
+    For diffusion pipelines, each prompt becomes a separate logical request.
+    The runtime may automatically batch compatible in-flight requests through
+    the scheduler and runner.
+
+```python
+from vllm_omni.entrypoints.omni import Omni
+
+if __name__ == "__main__":
+    omni = Omni(
+        model="Tongyi-MAI/Z-Image-Turbo",
+        # deploy_config="./deploy-config.yaml",  # Optional deploy override
+    )
+    prompts = [
+        "a cup of coffee on a table",
+        "a toy dinosaur on a sandy beach",
+        "a fox waking up in bed and yawning",
+    ]
+    omni_outputs = omni.generate(prompts)
+    for i_prompt, prompt_output in enumerate(omni_outputs):
+        this_images = prompt_output.images
+        for i_image, image in enumerate(this_images):
+            image.save(f"p{i_prompt}-img{i_image}.jpg")
+            print("saved to", f"p{i_prompt}-img{i_image}.jpg")
+            # saved to p0-img0.jpg
+            # saved to p1-img0.jpg
+            # saved to p2-img0.jpg
+```
+
+!!! info
+
+    For diffusion request batching, step execution, and streaming controls, see
+    [Diffusion Execution Modes](../user_guide/diffusion/execution_modes.md).
+
+For more usages, please refer to [offline inference](../user_guide/examples/offline_inference/qwen2_5_omni.md)
+
+## Online Serving with the API Server
+
+Text-to-image generation quickstart with vLLM-Omni:
+
+```bash
+vllm serve Tongyi-MAI/Z-Image-Turbo --omni --port 8091
+```
+
+```bash
+curl -s http://localhost:8091/v1/images/generations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "a cup of coffee on the table",
+    "size": "1024x1024",
+    "response_format": "b64_json",
+    "seed": 42
+  }' | jq -r '.data[0].b64_json' | base64 -d > coffee.png
+```
+
+See the [API Server guide](../serving/README.md) to choose an endpoint. For
+model-specific details, refer to the [text-to-image online serving
+example](../user_guide/examples/online_serving/text_to_image.md).
