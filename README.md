@@ -1,4 +1,4 @@
-<div align="center">
+<img width="1490" height="2060" alt="image" src="https://github.com/user-attachments/assets/3d595138-ccbd-43f3-881d-3837913e55c2" /><div align="center">
 
 <img src="docs/assets/aura-2-logo.png" width="200" alt="AURA 2.0 logo" align="left">
 
@@ -10,6 +10,7 @@
 <a href="deploy/docker/README.md"><img alt="Docker deployment" src="https://img.shields.io/badge/Deploy-Docker-2496ED?logo=docker&logoColor=white" height="22"></a>
 <a href="LICENSE"><img alt="Apache 2.0 license" src="https://img.shields.io/badge/License-Apache_2.0-blue" height="22"></a>
 <a href="https://arxiv.org/pdf/2611.17048"><img alt="Technical Report: arXiv" src="https://img.shields.io/badge/Technical_Report-arXiv-EC1C24?logo=arxiv&logoColor=white" height="22"></a>
+<a href="https://aura.polarpanda.top"><img alt="Online Demo" src="https://img.shields.io/badge/Online%20Demo-007F73?logo=googlechrome&amp;logoColor=white" height="22"></a>
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
