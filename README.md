@@ -1,5 +1,3 @@
-<img width="1490" height="2060" alt="image" src="https://github.com/user-attachments/assets/3d595138-ccbd-43f3-881d-3837913e55c2" /><div align="center">
-
 <img src="docs/assets/aura-2-logo.png" width="200" alt="AURA 2.0 logo" align="left">
 
 <h1>Beyond Answering: Learning to Speak First and Act in Streaming Video</h1>
